@@ -1,23 +1,31 @@
 # Ollama8Web
 
-A modern web interface for interacting with Ollama models through your browser.
+A modern web interface for Ollama, built with Next.js and Chakra UI. This project provides a user-friendly interface to interact with Ollama AI models.
 
-## Prerequisites
+## Features
 
-⚠️ **Important: This application requires Ollama to be installed and running on your machine** ⚠️
+- 🎨 Modern UI with Chakra UI components
+- 🌓 Dark/Light mode support
+- 📁 File upload capabilities
+- 💬 Message threading and reactions
+- 🎭 Model personas with custom system prompts
+- ⚡ Quick prompt templates
+- 📱 Responsive design for all screen sizes
 
-1. Install Ollama from [ollama.ai](https://ollama.ai)
-2. Start Ollama by running:
-```bash
-ollama serve
-```
+## Getting Started
 
-## Installation
+### Prerequisites
+
+- Node.js 20.x or later
+- npm or yarn
+- Ollama installed and running locally
+
+### Installation
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/ollama8web.git
-cd ollama8web
+git clone https://github.com/Jeff9497/Ollama8Web.git
+cd Ollama8Web
 ```
 
 2. Install dependencies:
@@ -30,57 +38,19 @@ npm install
 npm run dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## How it Works
+## Development
 
-This application provides a web interface for Ollama, which must be running on your local machine. Here's what you need to know:
-
-- All AI processing happens on your local machine using your own resources
-- No data is sent to external servers
-- The web interface connects to your local Ollama instance at `http://localhost:11434`
-- You need to have models pulled in Ollama to use them (e.g., `ollama pull llama2`)
-
-## Security
-
-- This application only connects to your local Ollama instance
-- No external API calls or data collection
-- All processing happens on your machine
-- No sensitive data is stored or transmitted
-
-## Features
-
-- Clean, modern chat interface
-- Support for multiple Ollama models
-- Real-time responses
-- Dark mode support
-- Mobile-responsive design
-
-## Usage
-
-1. Select your desired model from the dropdown menu
-2. Type your message in the input field
-3. Press Enter or click the Send button
-4. Wait for the model's response
-
-## API Endpoints
-
-The application exposes the following API endpoint:
-
-- `POST /api/chat` - Send a message to the Ollama model
-  - Request body:
-    ```json
-    {
-      "model": "llama2",
-      "messages": [
-        {
-          "role": "user",
-          "content": "Your message here"
-        }
-      ]
-    }
-    ```
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
 
 ## Contributing
 
-Feel free to open issues and pull requests! 
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is open source and available under the MIT License. 
