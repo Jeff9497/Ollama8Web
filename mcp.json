@@ -1,0 +1,6 @@
+{
+  "name": "Ollama8Web",
+  "description": "A modern web interface for Ollama, built with Next.js and Chakra UI",
+  "private": false,
+  "autoInit": true
+} 
