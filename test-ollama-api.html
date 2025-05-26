@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ollama API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #333;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ollama API Test</h1>
+    <p>This page tests if your browser can connect to the Ollama API.</p>
+    
+    <button id="test-connection">Test Connection</button>
+    <button id="list-models">List Models</button>
+    
+    <h2>Results:</h2>
+    <pre id="results">Click a button to test the API...</pre>
+    
+    <script>
+        const resultsElement = document.getElementById('results');
+        
+        // Test basic connection to Ollama API
+        document.getElementById('test-connection').addEventListener('click', async () => {
+            resultsElement.textContent = 'Testing connection to Ollama API...';
+            
+            try {
+                const response = await fetch('http://localhost:11434/api/tags', {
+                    method: 'GET'
+                });
+                
+                if (response.ok) {
+                    resultsElement.textContent = 'Connection successful! Ollama API is accessible.';
+                } else {
+                    resultsElement.innerHTML = `<span class="error">Error: HTTP ${response.status}</span>\n\nMake sure Ollama is running with: ollama serve`;
+                }
+            } catch (error) {
+                resultsElement.innerHTML = `<span class="error">Connection failed: ${error.message}</span>\n\nPossible issues:\n1. Ollama is not running\n2. CORS is blocking the request\n3. Ollama is running on a different port`;
+            }
+        });
+        
+        // List available models
+        document.getElementById('list-models').addEventListener('click', async () => {
+            resultsElement.textContent = 'Fetching models...';
+            
+            try {
+                const response = await fetch('http://localhost:11434/api/tags', {
+                    method: 'GET'
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultsElement.textContent = JSON.stringify(data, null, 2);
+                } else {
+                    resultsElement.innerHTML = `<span class="error">Error: HTTP ${response.status}</span>\n\nMake sure Ollama is running with: ollama serve`;
+                }
+            } catch (error) {
+                resultsElement.innerHTML = `<span class="error">Failed to fetch models: ${error.message}</span>`;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ollama Web UI</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Ollama8Web</h1>
+            <div class="header-controls">
+                <button id="voice-mode-btn" class="voice-mode-btn" title="Voice Mode">🎤</button>
+                <button id="theme-toggle-btn" class="theme-toggle-btn">🌙</button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="models-section">
+                    <h2>Models</h2>
+                    <div id="models-list" class="models-list">
+                        <!-- Models will be loaded here -->
+                        <div class="loading">Loading models...</div>
+                    </div>
+                </div>
+
+                <div class="create-model-section">
+                    <div id="create-model-header" class="section-header">
+                        <h2>Create Custom Model</h2>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div id="create-model-content" class="collapsible-content">
+                        <form id="create-model-form">
+                        <div class="form-group">
+                            <label for="base-model">Base Model:</label>
+                            <select id="base-model" required>
+                                <!-- Options will be populated from available models -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="model-name">New Model Name:</label>
+                            <input type="text" id="model-name" placeholder="e.g., my-custom-model" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="system-prompt">System Prompt:</label>
+                            <textarea id="system-prompt" rows="4" placeholder="Enter system prompt to customize model behavior..."></textarea>
+                        </div>
+                        <div class="parameters-section">
+                            <h3>Parameters</h3>
+                            <div class="parameter-group">
+                                <label for="temperature">Temperature:</label>
+                                <input type="range" id="temperature" min="0" max="2" step="0.1" value="0.7">
+                                <span id="temperature-value">0.7</span>
+                            </div>
+                            <div class="parameter-group">
+                                <label for="top-p">Top P:</label>
+                                <input type="range" id="top-p" min="0" max="1" step="0.05" value="0.9">
+                                <span id="top-p-value">0.9</span>
+                            </div>
+                            <div class="parameter-group">
+                                <label for="top-k">Top K:</label>
+                                <input type="range" id="top-k" min="1" max="100" step="1" value="40">
+                                <span id="top-k-value">40</span>
+                            </div>
+                            <div class="parameter-group">
+                                <label for="context-window">Context Window:</label>
+                                <select id="context-window">
+                                    <option value="512">512 tokens</option>
+                                    <option value="1024">1024 tokens</option>
+                                    <option value="2048" selected>2048 tokens</option>
+                                    <option value="4096">4096 tokens</option>
+                                    <option value="8192">8192 tokens</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn primary-btn">Create Model</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-section">
+                <div class="model-info">
+                    <h2>Selected Model: <span id="current-model">None</span></h2>
+                    <div class="model-stats">
+                        <div class="stat">
+                            <span class="stat-label">Size:</span>
+                            <span id="model-size">-</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Modified:</span>
+                            <span id="model-modified">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="chat-container" class="chat-container">
+                    <div class="welcome-message">
+                        <h3>Welcome to Ollama Web UI</h3>
+                        <p>Select a model from the sidebar to start chatting.</p>
+                    </div>
+                    <!-- Chat messages will appear here -->
+                </div>
+
+                <div class="chat-input-container">
+                    <textarea id="chat-input" placeholder="Type your message here..." rows="2"></textarea>
+                    <button id="send-btn" class="btn primary-btn" disabled>Send</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Voice Mode Interface -->
+        <div id="voice-mode-overlay" class="voice-mode-overlay">
+            <div class="voice-mode-container">
+                <div class="voice-mode-header">
+                    <h2>🎤 Voice Mode</h2>
+                    <button id="close-voice-mode" class="close-btn">✕</button>
+                </div>
+
+                <div class="voice-mode-content">
+                    <div class="voice-setup-section">
+                        <h3>🎯 Voice Setup</h3>
+                        <div class="voice-status" id="voice-status">
+                            <span class="status-indicator">●</span>
+                            <span class="status-text">No voice clone available</span>
+                        </div>
+
+                        <div class="voice-recording-area">
+                            <div class="recording-instructions">
+                                <p>📝 <strong>Instructions:</strong> Record 10-15 seconds of clear speech for best voice cloning results.</p>
+                                <p>💡 <strong>Tip:</strong> Speak naturally and clearly in a quiet environment.</p>
+                            </div>
+
+                            <div class="recording-controls">
+                                <button id="start-recording" class="record-btn">
+                                    <span class="btn-icon">🎙️</span>
+                                    <span class="btn-text">Start Recording</span>
+                                </button>
+                                <button id="stop-recording" class="record-btn" style="display: none;">
+                                    <span class="btn-icon">⏹️</span>
+                                    <span class="btn-text">Stop Recording</span>
+                                </button>
+                                <div class="recording-timer" id="recording-timer" style="display: none;">
+                                    <span class="timer-text">Recording: <span id="timer-display">00:00</span></span>
+                                </div>
+                            </div>
+
+                            <div class="audio-preview" id="audio-preview" style="display: none;">
+                                <h4>🎧 Preview Your Recording</h4>
+                                <audio id="recorded-audio" controls></audio>
+                                <div class="preview-actions">
+                                    <button id="save-voice-clone" class="save-btn">
+                                        <span class="btn-icon">💾</span>
+                                        <span class="btn-text">Save Voice Clone</span>
+                                    </button>
+                                    <button id="record-again" class="secondary-btn">
+                                        <span class="btn-icon">🔄</span>
+                                        <span class="btn-text">Record Again</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="voice-chat-section">
+                        <h3>💬 Voice Chat</h3>
+                        <div class="voice-chat-controls">
+                            <div class="voice-mode-toggle">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="voice-responses-enabled">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="toggle-label">Enable Voice Responses</span>
+                            </div>
+
+                            <div class="voice-input-toggle">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="voice-input-enabled">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="toggle-label">Enable Voice Input (Experimental)</span>
+                            </div>
+                        </div>
+
+                        <div class="voice-test-area">
+                            <h4>🧪 Test Voice Output</h4>
+                            <div class="test-controls">
+                                <input type="text" id="test-text" placeholder="Enter text to test your voice clone..." maxlength="200">
+                                <button id="test-voice" class="test-btn">
+                                    <span class="btn-icon">🔊</span>
+                                    <span class="btn-text">Test Voice</span>
+                                </button>
+                            </div>
+                            <div class="test-status" id="test-status"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

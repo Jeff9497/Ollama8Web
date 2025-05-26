@@ -1,0 +1,25 @@
+# Voice cloning and TTS dependencies
+# Install with: pip install -r voice_requirements.txt
+
+# Core TTS library with voice cloning support
+realtimetts[coqui]
+
+# Audio processing
+pydub
+soundfile
+librosa
+
+# Web framework additions for file handling
+werkzeug
+
+# Optional: For better audio format support
+ffmpeg-python
+
+# Note: You may also need to install system dependencies:
+# - FFmpeg (for audio conversion)
+# - CUDA toolkit (for GPU acceleration)
+# 
+# Installation instructions:
+# 1. pip install -r voice_requirements.txt
+# 2. Install FFmpeg: https://ffmpeg.org/download.html
+# 3. For GPU support, install CUDA toolkit from NVIDIA
